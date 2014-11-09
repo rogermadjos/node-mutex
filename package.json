@@ -1,6 +1,6 @@
 {
 	"name": "node-mutex",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Mutex for distributed nodejs application",
 	"main": "index.js",
 	"repository": {
