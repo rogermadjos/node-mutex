@@ -1,5 +1,6 @@
 # node-mutex
 
+[![Build Status](https://travis-ci.org/rogermadjos/node-mutex.svg?branch=master)](https://travis-ci.org/rogermadjos/node-mutex)
 [![npm version](https://badge.fury.io/js/node-mutex.svg)](http://badge.fury.io/js/node-mutex)
 
 ## How to install
