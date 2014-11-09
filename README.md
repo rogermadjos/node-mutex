@@ -30,7 +30,7 @@ mutex.lock('key', function(err, unlock) {
 
 ## Options
 ```js
-var mutex = require(node-mutex)(opts);
+var mutex = require('node-mutex')(opts);
 ```
 List of available options:
 - `host`: host to connect redis on (`127.0.0.1`)
