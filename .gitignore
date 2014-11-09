@@ -1,3 +1,4 @@
 node_modules
 .vagrant
 npm-debug.log
+Vagrantfile
