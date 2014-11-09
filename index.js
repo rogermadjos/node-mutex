@@ -22,7 +22,6 @@ module.exports = function(opts) {
  */
 
 function Mutex (opts) {
-	var self = this;
 	opts = opts || {};
 
 	this.host = opts.host || '127.0.0.1';
@@ -41,7 +40,9 @@ function Mutex (opts) {
 	this.sub.on('message', function(_, key) {
 		if(listeners[key]) {
 			for(var k in listeners[key]) {
-				listeners[key][k]();
+		        if(listeners[key][k]) {
+		        	listeners[key][k](); 
+		        }
 			}
 		}
 	});
@@ -52,16 +53,16 @@ var listeners = {};
 
 //acquire lock and set expire time
 scripts.acquire = {
-	script: "local locked = redis.call('SETNX', KEYS[1], ARGV[1]);"
-		+ "if locked then redis.call('PEXPIRE', KEYS[1], ARGV[2]) end;"
-		+ "return locked"
-}
+	script: "local locked = redis.call('SETNX', KEYS[1], ARGV[1]);" +
+  	"if locked then redis.call('PEXPIRE', KEYS[1], ARGV[2]) end;" +
+  	"return locked"
+};
 
 //should not release lock that's not yours
 scripts.release = {
-	script: "local id = redis.call('GET', KEYS[1]);"
-		+ "if id == ARGV[1] then redis.call('DEL', KEYS[1]) end"
-}
+	script: "local id = redis.call('GET', KEYS[1]);" +
+  	"if id == ARGV[1] then redis.call('DEL', KEYS[1]) end"
+};
 
 //load lua scripts into redis
 function loadScripts(client, callback) {
@@ -126,7 +127,7 @@ Mutex.prototype.lock = function(key, fn, expireTime) {
 					}
 					tout = setTimeout(acquire, self.sleepTime);
 				});
-			}
+			};
 			acquire();
 		}]
 	}, function(err, results) {
@@ -145,7 +146,7 @@ Mutex.prototype.lock = function(key, fn, expireTime) {
 					}
 				});
 			});
-		}
+		};
 		fn(null, done);
 	});
-}
+};
