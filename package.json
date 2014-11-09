@@ -2,6 +2,10 @@
 	"name": "node-mutex",
 	"version": "0.0.1",
 	"description": "Mutex for distributed nodejs application",
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:rogermadjos/node-mutex.git"
+	},
 	"keyword": [
 		"redis",
 		"mutex",
