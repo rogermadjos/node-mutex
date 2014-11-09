@@ -87,6 +87,13 @@ function loadScripts(client, callback) {
 		});
 }
 
+/**
+ * lock.
+ *
+ * @param string, function, number
+ * @api public
+ */
+
 Mutex.prototype.lock = function(key, fn, expireTime) {
 	var self = this;
 	var id = uuid.v1();
