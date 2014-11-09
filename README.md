@@ -9,7 +9,7 @@
 npm install node-mutex
 ```
 
-`node-mutex` ensures synchronicity of `critical` code blocks accross multiple nodejs instances. This is achieved with the help of `redis` and some clever aproach to managing `locks`.
+`node-mutex` ensures synchronicity of `critical` code blocks across multiple nodejs instances. This is achieved with the help of `redis` and some clever aproach to managing `locks`.
 
 ## How to use
 ```js
