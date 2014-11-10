@@ -98,6 +98,7 @@ function loadScripts(client, callback) {
 Mutex.prototype.lock = function(key, fn, expireTime) {
 	var self = this;
 	var id = uuid.v1();
+	var original_key = key;
 	key = self.prefix+key;
 	expireTime = expireTime || self.expireTime;
 
@@ -118,7 +119,14 @@ Mutex.prototype.lock = function(key, fn, expireTime) {
 					if(err) {
 						delete listeners[key][id];
 						clearTimeout(tout);
-						return callback(err);
+						if(err.toString().indexOf('NOSCRIPT') > 0) {
+							delete scripts.acquire.sha;
+							delete scripts.release.sha;
+							return callback(null, false);
+						}
+						else {
+							return callback(err);
+						}
 					}
 					if(Number(result)) {
 						delete listeners[key][id];
@@ -134,19 +142,24 @@ Mutex.prototype.lock = function(key, fn, expireTime) {
 		if(err) {
 			return fn(err);
 		}
-		var done = function() {
-			done = function(){};
-			self.pub.evalsha(results.loadScripts.release, 1, key, id, function(err) {
-				if(err) {
-					return console.error(err);
-				}
-				self.pub.publish(self.prefix+'release', key, function(err) {
+		if(results.acquireLock) {
+			var done = function() {
+				done = function(){};
+				self.pub.evalsha(results.loadScripts.release, 1, key, id, function(err) {
 					if(err) {
-						console.error(err);
+						return console.error(err);
 					}
+					self.pub.publish(self.prefix+'release', key, function(err) {
+						if(err) {
+							console.error(err);
+						}
+					});
 				});
-			});
-		};
-		fn(null, done);
+			};
+			fn(null, done);
+		}
+		else {
+			self.lock(original_key, fn, expireTime);
+		}
 	});
 };

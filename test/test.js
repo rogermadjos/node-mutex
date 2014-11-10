@@ -42,7 +42,7 @@ describe('Mutex Tests: ', function() {
 	it('should set redis lock and delete after unlock() is called', function(done) {
 		mutex.lock('test', function(err, unlock) {
 			client.exists(mutex.prefix+'test', function(_, result) {
-				assert(Number(result));
+				assert(!!Number(result));
 				unlock();
 				setTimeout(function() {
 					client.exists(mutex.prefix+'test', function(err, result) {
@@ -53,6 +53,26 @@ describe('Mutex Tests: ', function() {
 						done();
 					})
 				}, 250);
+			});
+		});
+	});
+
+	it('should reload lua scripts if needed', function(done) {
+		client.script('FLUSH', function(err, unlock) {
+			mutex.lock('test', function(err, unlock) {
+				client.exists(mutex.prefix+'test', function(_, result) {
+					assert(!!Number(result));
+					unlock();
+					setTimeout(function() {
+						client.exists(mutex.prefix+'test', function(err, result) {
+							if(err) {
+								console.error(err);
+							}
+							assert(!Number(result));
+							done();
+						})
+					}, 250);
+				});
 			});
 		});
 	});
