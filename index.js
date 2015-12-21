@@ -27,7 +27,7 @@ function Mutex (opts) {
 	this.host = opts.host || '127.0.0.1';
 	this.port = Number(opts.port || 6379);
 	this.sleepTime = opts.sleepTime || 250;
-	this.expireTime = opts.expireTime || 3000;
+	this.expireTime = opts.expireTime || 5000;
 	this.prefix = opts.prefix || 'mutex:';
 	this.pub = opts.pub;
 	this.sub = opts.sub;
