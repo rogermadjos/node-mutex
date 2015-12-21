@@ -41,7 +41,7 @@ function Mutex (opts) {
 		if(listeners[key]) {
 			for(var k in listeners[key]) {
 		        if(listeners[key][k]) {
-		        	listeners[key][k](); 
+		        	listeners[key][k]();
 		        }
 			}
 		}

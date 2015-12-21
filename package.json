@@ -25,5 +25,13 @@
 	},
 	"devDependencies": {
 		"mocha": "2.0.1"
+	},
+	"jshintConfig": {
+		"node": true,
+		"undef": true,
+		"unused": true,
+		"esnext": true,
+		"sub": true,
+		"validthis": true
 	}
 }
