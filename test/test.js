@@ -1,10 +1,13 @@
+/* global describe, it, before */
+'use strict';
+
 var assert = require('assert');
 var Mutex = require('../');
 var redis = require('redis').createClient;
 var async = require('async');
 
 describe('Mutex Tests: ', function() {
-	this.timeout(10000);
+	this.timeout(15000);
 
 	var client = redis();
 	var mutex = new Mutex();
@@ -19,12 +22,11 @@ describe('Mutex Tests: ', function() {
 		var mutex = new Mutex();
 		assert.equal(mutex.prefix, 'mutex:');
 		assert.equal(mutex.sleepTime, 250);
-		assert.equal(mutex.expireTime, 3000);
+		assert.equal(mutex.expireTime, 5000);
 		assert.equal(mutex.host, '127.0.0.1');
 		assert.equal(mutex.port, 6379);
 		assert.equal(mutex.pub.address, '127.0.0.1:6379');
 		assert.equal(mutex.sub.address, '127.0.0.1:6379');
-		delete mutex;
 	});
 
 	it('should apply custom settings', function() {
@@ -36,7 +38,6 @@ describe('Mutex Tests: ', function() {
 		assert.equal(mutex.prefix, 'custom:');
 		assert.equal(mutex.sleepTime, 500);
 		assert.equal(mutex.expireTime, 5000);
-		delete mutex;
 	});
 
 	it('should set redis lock and delete after unlock() is called', function(done) {
@@ -51,14 +52,15 @@ describe('Mutex Tests: ', function() {
 						}
 						assert(!Number(result));
 						done();
-					})
+					});
 				}, 250);
 			});
 		});
 	});
 
 	it('should reload lua scripts if needed', function(done) {
-		client.script('FLUSH', function(err, unlock) {
+		client.script('FLUSH', function(err) {
+			if(err) return done(err);
 			mutex.lock('test', function(err, unlock) {
 				client.exists(mutex.prefix+'test', function(_, result) {
 					assert(!!Number(result));
@@ -70,7 +72,7 @@ describe('Mutex Tests: ', function() {
 							}
 							assert(!Number(result));
 							done();
-						})
+						});
 					}, 250);
 				});
 			});
