@@ -54,7 +54,7 @@ var listeners = {};
 //acquire lock and set expire time
 scripts.acquire = {
 	script: "local locked = redis.call('SETNX', KEYS[1], ARGV[1]);" +
-  	"if locked then redis.call('PEXPIRE', KEYS[1], ARGV[2]) end;" +
+  	"if locked == 1 then redis.call('PEXPIRE', KEYS[1], ARGV[2]) end;" +
   	"return locked"
 };
 
