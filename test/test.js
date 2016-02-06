@@ -144,4 +144,25 @@ describe('Mutex Tests: ', function() {
 		});
 	});
 
+	it('should acquire lock after previous lock expires', function(done) {
+		this.timeout(6000);
+
+		mutex.lock('test:2', function(err, unlock) {
+			if(err) {
+				return done(err);
+			}
+			var timestamp = Date.now();
+			mutex.lock('test:2', function(err, unlock2) {
+		    if(err) {
+	        unlock();
+					return done(err);
+		    }
+				var diff = Date.now() - timestamp;
+				assert.ok(diff >= 5000, 'acquisition time should be greater than `expireTime`');
+				unlock2();
+				done();
+			});
+		});
+	});
+
 });
