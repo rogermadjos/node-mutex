@@ -145,7 +145,7 @@ describe('Mutex Tests: ', function() {
 	});
 
 	it('should acquire lock after previous lock expires', function(done) {
-		this.timeout(6000);
+		this.timeout(3000);
 
 		mutex.lock('test:2', function(err, unlock) {
 			if(err) {
@@ -158,11 +158,12 @@ describe('Mutex Tests: ', function() {
 					return done(err);
 		    }
 				var diff = Date.now() - timestamp;
-				assert.ok(diff >= 5000, 'acquisition time should be greater than `expireTime`');
+				assert.ok(diff >= 2000, 'acquisition time should be greater than `expireTime`');
+				assert.ok(diff < 2100);
 				unlock2();
 				done();
 			});
-		});
+		}, 2000);
 	});
 
 });
