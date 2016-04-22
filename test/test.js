@@ -56,6 +56,7 @@ describe( 'Mutex Tests: ', function() {
         }, 250 );
       } );
     } );
+
   } );
 
   it( 'should reload lua scripts if needed', function( done ) {
@@ -103,7 +104,7 @@ describe( 'Mutex Tests: ', function() {
     }, mutex.expireTime + mutex.expireTime / 2 );
   } );
 
-  it( 'shoud not block executions from different scopes', function( done ) {
+  it( 'shoud not block execution from different scopes', function( done ) {
     var count = 0;
     var timestamp = Date.now();
     mutex.lock( 'test:0', function( err, unlock ) {

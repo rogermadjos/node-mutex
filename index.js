@@ -7,6 +7,7 @@
 var redis = require( 'redis' ).createClient;
 var uuid = require( 'node-uuid' );
 var async = require( 'async' );
+var Promise = require( 'bluebird' ); //jshint ignore:line
 
 /**
  * Module exports.
@@ -57,15 +58,19 @@ var listeners = {};
 
 //Acquire lock and set expire time
 scripts.acquire = {
-  script: 'local locked = redis.call(\'SETNX\', KEYS[1], ARGV[1]);' +
-    'if locked == 1 then redis.call(\'PEXPIRE\', KEYS[1], ARGV[2]) end;' +
+  script: [
+    'local locked = redis.call(\'SETNX\', KEYS[1], ARGV[1]);',
+    'if locked == 1 then redis.call(\'PEXPIRE\', KEYS[1], ARGV[2]) end;',
     'return locked'
+  ].join( '' )
 };
 
 //Should not release lock that's not yours
 scripts.release = {
-  script: 'local id = redis.call(\'GET\', KEYS[1]);' +
+  script: [
+    'local id = redis.call(\'GET\', KEYS[1]);',
     'if id == ARGV[1] then redis.call(\'DEL\', KEYS[1]) end'
+  ].join( '' )
 };
 
 //Load lua scripts into redis
@@ -93,13 +98,36 @@ function loadScripts ( client, callback ) {
 }
 
 /**
- * Lock.
+ * Acquire lock.
  *
- * @param string, function, number
- * @api public
+ * @access private
+ * @param {string}   key
  */
+Mutex.prototype.lock = function( key ) {
+  var self = this;
+  if ( typeof arguments[ 1 ] !== 'function' ) {
+    return new Promise( function( resolve, reject ) {
+      self._lock( key, function( err, unlock ) {
+        if ( err ) {
+          return reject( err );
+        }
+        resolve( unlock );
+      }, arguments[ 1 ] );
+    } );
+  }
 
-Mutex.prototype.lock = function( key, fn, expireTime ) {
+  self._lock.apply( this, arguments );
+};
+
+/**
+ * Acquire lock.
+ *
+ * @access private
+ * @param {string}   key
+ * @param {function} fn
+ * @param {number}   expireTime
+ */
+Mutex.prototype._lock = function( key, fn, expireTime ) {
   var self = this;
   var id = uuid.v1();
   var originalKey = key;
