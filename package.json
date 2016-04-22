@@ -33,5 +33,34 @@
     "esnext": true,
     "sub": true,
     "validthis": true
+  },
+  "jscsConfig": {
+    "preset": "jquery",
+    "fileExtensions": [
+      "js"
+    ],
+    "requireCurlyBraces": true,
+    "requireSemicolons": true,
+    "requireSpacesInFunctionDeclaration": {
+      "beforeOpeningRoundBrace": true,
+      "beforeOpeningCurlyBrace": true
+    },
+    "disallowQuotedKeysInObjects": {
+      "allExcept": [
+        "reserved"
+      ]
+    },
+    "validateIndentation": 2,
+    "maximumLineLength": 125,
+    "validateLineBreaks": "LF",
+    "disallowTrailingComma": true,
+    "disallowUnusedParams": true,
+    "disallowImplicitTypeConversion": [
+      "string"
+    ],
+    "validateQuoteMarks": "'",
+    "esnext": true,
+    "maxErrors": null,
+    "requirePaddingNewLinesBeforeLineComments": false
   }
 }
