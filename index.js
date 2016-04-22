@@ -106,13 +106,14 @@ function loadScripts ( client, callback ) {
 Mutex.prototype.lock = function( key ) {
   var self = this;
   if ( typeof arguments[ 1 ] !== 'function' ) {
+    var expireTime = arguments[ 1 ];
     return new Promise( function( resolve, reject ) {
       self._lock( key, function( err, unlock ) {
         if ( err ) {
           return reject( err );
         }
         resolve( unlock );
-      }, arguments[ 1 ] );
+      }, expireTime );
     } );
   }
 

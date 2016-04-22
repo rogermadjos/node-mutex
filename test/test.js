@@ -6,7 +6,7 @@ var Mutex = require( '../' );
 var redis = require( 'redis' ).createClient;
 var async = require( 'async' );
 
-describe( 'Mutex Tests: ', function() {
+describe( 'Node Mutex', function() {
   this.timeout( 15000 );
 
   var client = redis();
@@ -56,7 +56,14 @@ describe( 'Mutex Tests: ', function() {
         }, 250 );
       } );
     } );
+  } );
 
+  it( 'should obtain lock using the Promise API', function( done ) {
+    mutex.lock( 'test_promise' )
+      .then( function( unlock ) {
+        unlock();
+        done();
+      } );
   } );
 
   it( 'should reload lua scripts if needed', function( done ) {

@@ -16,13 +16,13 @@ npm install node-mutex
 var mutex = require( 'node-mutex' )();
 
 mutex.lock( 'key', function( err, unlock ) {
-	if ( err ) {
-		console.error( err );
-		console.error( 'Unable to acquire lock' );
-	}
-	//synchronized code block
+  if ( err ) {
+  	console.error( err );
+  	console.error( 'Unable to acquire lock' );
+  }
+  //synchronized code block
 
-	unlock();
+  unlock();
 });
 
 ```
@@ -48,6 +48,7 @@ var mutex = require('node-mutex')(opts);
 List of available options:
 - `host`: host to connect redis on (`127.0.0.1`)
 - `port`: port to connect redis on (`6379`)
+- `prefix`: port to connect redis on (`mutex:`)
 - `sleepTime`: maximum time in milliseconds to wait before retrying the acquisition of lock (`250`)
 - `expireTime`: time in milliseconds before the `lock` expires (`3000`)
 - `pub`: optional, the redis client to publish events on
