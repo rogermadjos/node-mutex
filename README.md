@@ -13,19 +13,32 @@ npm install node-mutex
 
 ## How to use
 ```js
-var mutex = require('node-mutex')();
+var mutex = require( 'node-mutex' )();
 
-mutex.lock('key', function(err, unlock) {
-	if(err) {
-		console.error(err);
-		console.error('Unable to acquire lock');
+mutex.lock( 'key', function( err, unlock ) {
+	if ( err ) {
+		console.error( err );
+		console.error( 'Unable to acquire lock' );
 	}
-
 	//synchronized code block
 
 	unlock();
 });
 
+```
+
+## How to use ( Promise API )
+```js
+var mutex = require( 'node-mutex' )();
+
+mutex
+  .lock( 'key' )
+  .then( function( unlock ) {
+
+    //synchronized code block
+
+  	unlock();
+  } );
 ```
 
 ## Options
