@@ -25,6 +25,7 @@ module.exports = function( opts ) {
 function Mutex ( opts ) {
   opts = opts || {};
 
+  this.url  = opts.url;
   this.host = opts.host || '127.0.0.1';
   this.port = Number( opts.port || 6379 );
   this.sleepTime = opts.sleepTime || 250;
@@ -35,10 +36,10 @@ function Mutex ( opts ) {
 
   //Init clients if needed
   if ( !this.pub ) {
-    this.pub = redis( this.port, this.host );
+    this.pub = this.url ? redis( this.url ) : redis( this.port, this.host );
   }
   if ( !this.sub ) {
-    this.sub = redis( this.port, this.host );
+    this.sub = this.url ? redis( this.url ) : redis( this.port, this.host );
   }
 
   this.sub.subscribe( this.prefix + 'release' );
