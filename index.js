@@ -5,7 +5,7 @@
  */
 
 var redis = require( 'redis' ).createClient;
-var uuid = require( 'node-uuid' );
+var uuid = require( 'uuid' );
 var async = require( 'async' );
 var Promise = require( 'bluebird' ); //jshint ignore:line
 
